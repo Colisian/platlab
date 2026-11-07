@@ -4,7 +4,7 @@
 
 Fault-injection labs for practicing Linux troubleshooting and Puppet on **RHEL-family (Rocky/Alma/RHEL)** and **Ubuntu** VMs.
 
-> ⚠️ **Spoilers:** reading the scripts tells you how each lab is broken. Run them, don't read them, until you've finished a lab.
+>  **Spoilers:** reading the scripts tells you how each lab is broken. Run them, don't read them, until you've finished a lab.
 
 ---
 
