@@ -1,5 +1,7 @@
 # PlatLab
 
+[![CI](https://github.com/Colisian/platlab/actions/workflows/ci.yml/badge.svg)](https://github.com/Colisian/platlab/actions/workflows/ci.yml)
+
 Fault-injection labs for practicing Linux troubleshooting and Puppet on **RHEL-family (Rocky/Alma/RHEL)** and **Ubuntu** VMs.
 
 > ⚠️ **Spoilers:** reading the scripts tells you how each lab is broken. Run them, don't read them, until you've finished a lab.
@@ -26,6 +28,16 @@ sudo bash a1.sh reset      # clean up
 ```
 
 Update to the latest version later by re-running the same `curl` line.
+
+### Pin a version
+
+`main` always has the newest labs. To install a fixed release that won't change, pass a tag:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Colisian/platlab/v1.0/install.sh | sudo BRANCH=v1.0 bash
+```
+
+Releases are listed on the [Releases page](https://github.com/Colisian/platlab/releases).
 
 ---
 
@@ -68,3 +80,21 @@ curl -fsSLO https://raw.githubusercontent.com/Colisian/platlab/main/install.sh
 less install.sh        # read it
 sudo bash install.sh
 ```
+
+---
+
+## Contributing and CI
+
+Every push and pull request runs [GitHub Actions](.github/workflows/ci.yml):
+
+- **ShellCheck**: lints every script (warnings and errors fail the build)
+- **Bash syntax**: `bash -n` on every script
+- **Repo consistency**: [`ci/check-repo.sh`](ci/check-repo.sh) confirms each script in `scripts/` is listed in `install.sh` and has a `labs/<id>/README.md`
+
+To add a lab: add `scripts/<id>.sh`, add `<id>.sh` to `SCRIPTS=(...)` in `install.sh`, and write `labs/<id>/README.md`. Run `bash ci/check-repo.sh` locally before pushing.
+
+---
+
+## License
+
+[MIT](LICENSE)

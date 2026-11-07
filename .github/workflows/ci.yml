@@ -1,0 +1,51 @@
+# CI for PlatLab: runs on every push and pull request.
+# Goal: a broken script should never reach main, because everyone's curl installer pulls from main.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:        # adds a "Run workflow" button in the Actions tab for manual runs
+
+permissions:
+  contents: read            # least privilege: these jobs only need to read the code
+
+jobs:
+  shellcheck:
+    name: ShellCheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # ShellCheck ships preinstalled on GitHub's Ubuntu runners, so no install step is needed.
+      # -S warning: fail on warnings and errors; info/style notes are printed by the
+      # second step but don't block the merge.
+      - name: ShellCheck (warnings and errors fail the build)
+        run: shellcheck -S warning install.sh scripts/*.sh ci/*.sh
+
+      - name: ShellCheck (full report, informational only)
+        if: always()
+        run: shellcheck install.sh scripts/*.sh ci/*.sh || true
+
+  syntax:
+    name: Bash syntax
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # bash -n parses each file without running it: a fast, zero-risk syntax check.
+      - name: bash -n on every script
+        run: |
+          for f in install.sh scripts/*.sh ci/*.sh; do
+            bash -n "$f" && echo "ok  $f"
+          done
+
+  consistency:
+    name: Repo consistency
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Catches the easy-to-forget step when adding a lab: listing it in install.sh
+      # and writing its README.
+      - name: Every script is installed and documented
+        run: bash ci/check-repo.sh
