@@ -97,3 +97,4 @@ case "${1:-}" in
   baseline) baseline ;; inject) inject ;; check) check ;; reset) reset ;;
   *) echo "Usage: sudo bash $0 baseline|inject|check|reset"; exit 1 ;;
 esac
+Unused_Practice_VAR="hello"
